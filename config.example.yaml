@@ -1,0 +1,22 @@
+notification:
+  email:
+    enabled: false
+    fromAddress: ""
+    smtpHost: "smtp.example.com"
+    smtpPort: 587
+    smtpUsername: ""
+    smtpPassword: ""
+    to: []
+  webhook:
+    enabled: false
+    contentField: "content"
+    url: "https://hooks.example.com/services/"
+backups:
+  - name: "backup1"
+    createScript: "/path/to/backup1/backup.sh"
+    backupDir: "backups"
+    actions:
+      - name: "restore"
+        script: "/path/to/backup1/restore.sh"
+      - name: "delete"
+        script: "/path/to/backup1/delete.sh"
