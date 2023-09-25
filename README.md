@@ -23,6 +23,24 @@ Backup Manager is an open source single binary backup manager written in Golang.
 
 Backups and notifications are defined in a `config.yaml` file. This file also allows you to configure custom actions you can run on backups (you can do more stuff than just create backups). These custom actions (eg. create, restore, delete, ...) are commands that are executed by the backup manager: this can be a bash script, a binary or anything else that can be executed by the system.
 
+## Using Backup Manager
+
+After configuring the config.yaml file, you can use Backup Manager as follows:
+
+### Creating a backup
+
+`./backup-manager create [-b backupname]`
+
+### Listing existing backups
+
+`./backup-manager list`
+
+The list command also allows you to select and manage files.
+
+### Running a custom action
+
+`./backup-manager manage [-b backupname] [-i fileindex] [-a actionname]`
+
 ## Configuration
 
 Configuration is done in a `config.yaml` file. You can find an example configuration in `config.yaml.example`.
