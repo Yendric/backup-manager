@@ -20,7 +20,7 @@ var manageCmd = &cobra.Command{
 	Short:   "Shows a list of all backups and allows you to manage them",
 	Run: func(cmd *cobra.Command, args []string) {
 		backupFlag, _ := cmd.Flags().GetString("backup")
-		fileFlag, _ := cmd.Flags().GetString("index=")
+		fileFlag, _ := cmd.Flags().GetString("index")
 		actionFlag, _ := cmd.Flags().GetString("action")
 
 		// Select backup type
