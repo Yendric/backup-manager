@@ -2,16 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"io/fs"
 	"log"
-	"os"
 
 	"github.com/fatih/color"
 	"github.com/rodaine/table"
 	"github.com/spf13/cobra"
-	"github.com/yendric/backup-manager/config"
 	"github.com/yendric/backup-manager/form"
-	"github.com/yendric/backup-manager/utils"
 )
 
 var manageCmd = &cobra.Command{
@@ -36,7 +32,7 @@ var manageCmd = &cobra.Command{
 		tbl := table.New("Index", "Name", "Date", "Size")
 		tbl.WithHeaderFormatter(headerFmt).WithFirstColumnFormatter(columnFmt)
 
-		files := getFilesForBackup(backup)
+		files := backup.Files()
 		for index, file := range files {
 			fileInfo, err := file.Info()
 			if err != nil {
@@ -60,12 +56,12 @@ var manageCmd = &cobra.Command{
 		}
 
 		// Run specified action
-		err = utils.RunActionWithFile(backup, action, files[fileIndex])
+		err = action.Run(files[fileIndex])
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		fmt.Println(backup.Name + " " + action.Name + " action on '" + files[fileIndex].Name() + "' ran successfully")
+		fmt.Println(backup.Name() + " " + action.Name() + " action on '" + files[fileIndex].Name() + "' ran successfully")
 
 	},
 }
@@ -76,13 +72,4 @@ func init() {
 	manageCmd.Flags().StringP("backup", "b", "", "The backup type to list")
 	manageCmd.Flags().StringP("index", "i", "", "The backup file index to select")
 	manageCmd.Flags().StringP("action", "a", "", "The action to run on the selected file")
-}
-
-func getFilesForBackup(backup config.Backup) []fs.DirEntry {
-	files, err := os.ReadDir(backup.BackupDir)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return files
 }

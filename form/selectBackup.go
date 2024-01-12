@@ -4,24 +4,23 @@ import (
 	"log"
 
 	"github.com/manifoldco/promptui"
+	"github.com/yendric/backup-manager/backups"
 	"github.com/yendric/backup-manager/config"
-	"github.com/yendric/backup-manager/utils"
 )
 
-func SelectBackup(question string, def string) (config.Backup, error) {
+func SelectBackup(question string, def string) (backups.Backup, error) {
 	// Check default value
 	if def != "" {
-		backup, err := utils.GetBackupByName(def)
+		bcup, err := backups.GetByName(def)
 		if err != nil {
-			log.Fatalln(err)
+			return backups.Backup{}, err
 		}
-		return backup, err
+		return bcup, err
 
 	}
 
 	// Prompt value if default value is not supplied
 	var items []string
-	var backup config.Backup
 
 	for _, backup := range config.Configuration.Backups {
 		items = append(items, backup.Name)
@@ -33,13 +32,12 @@ func SelectBackup(question string, def string) (config.Backup, error) {
 	}
 
 	_, result, err := prompt.Run()
-
 	if err != nil {
 		log.Fatalln(err)
-		return backup, err
+		return backups.Backup{}, err
 	}
 
-	backup, err = utils.GetBackupByName(result)
+	backup, err := backups.GetByName(result)
 	if err != nil {
 		log.Fatalln(err)
 		return backup, err

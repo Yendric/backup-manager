@@ -5,7 +5,15 @@ type Config struct {
 		Email   EmailNotification
 		Webhook WebhookNotification
 	}
-	Backups []Backup
+	Backups []struct {
+		Name         string
+		CreateScript string
+		BackupDir    string
+		Actions      []struct {
+			Name   string
+			Script string
+		}
+	}
 }
 
 type EmailNotification struct {
@@ -22,16 +30,4 @@ type WebhookNotification struct {
 	Enabled      bool
 	ContentField string
 	Url          string
-}
-
-type Backup struct {
-	Name         string
-	CreateScript string
-	BackupDir    string
-	Actions      []Action
-}
-
-type Action struct {
-	Name   string
-	Script string
 }

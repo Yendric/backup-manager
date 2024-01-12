@@ -4,14 +4,13 @@ import (
 	"log"
 
 	"github.com/manifoldco/promptui"
-	"github.com/yendric/backup-manager/config"
-	"github.com/yendric/backup-manager/utils"
+	"github.com/yendric/backup-manager/backups"
 )
 
-func SelectAction(question string, backup config.Backup, def string) (config.Action, error) {
+func SelectAction(question string, bcup backups.Backup, def string) (backups.Action, error) {
 	// Check default value
 	if def != "" {
-		action, err := utils.GetActionByName(backup, def)
+		action, err := bcup.Action(def)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -20,12 +19,10 @@ func SelectAction(question string, backup config.Backup, def string) (config.Act
 	}
 
 	// Prompt value if default value is not supplied
-
 	var items []string
-	var action config.Action
 
-	for _, action := range backup.Actions {
-		items = append(items, action.Name)
+	for _, action := range bcup.Actions() {
+		items = append(items, action.Name())
 	}
 
 	prompt := promptui.Select{
@@ -37,13 +34,13 @@ func SelectAction(question string, backup config.Backup, def string) (config.Act
 
 	if err != nil {
 		log.Fatalf("Prompt failed %v\n", err)
-		return action, err
+		return backups.Action{}, err
 	}
 
-	action, err = utils.GetActionByName(backup, result)
+	action, err := bcup.Action(result)
 	if err != nil {
 		log.Fatalf("Prompt failed %v\n", err)
-		return action, err
+		return backups.Action{}, err
 	}
 
 	return action, nil

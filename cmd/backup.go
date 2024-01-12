@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -8,9 +5,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/yendric/backup-manager/config"
 	"github.com/yendric/backup-manager/form"
-	"github.com/yendric/backup-manager/utils"
 )
 
 var backupCmd = &cobra.Command{
@@ -18,8 +13,6 @@ var backupCmd = &cobra.Command{
 	Aliases: []string{"create", "new", "make", "run"},
 	Short:   "Creates a new backup",
 	Run: func(cmd *cobra.Command, args []string) {
-		var backup config.Backup
-
 		backupFlag, _ := cmd.Flags().GetString("backup")
 
 		backup, err := form.SelectBackup("What would you like to backup?", backupFlag)
@@ -28,12 +21,12 @@ var backupCmd = &cobra.Command{
 		}
 
 		// Run action
-		err = utils.CreateBackup(backup)
+		err = backup.Run()
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		fmt.Println(backup.Name + " backup created successfully")
+		fmt.Println(backup.Name() + " backup created successfully")
 	},
 }
 
